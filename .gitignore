@@ -4,3 +4,4 @@ bin/
 .polyglot*
 .tycho-consumer-pom.xml
 pom.tycho
+pom-manipulation-ext.xml
