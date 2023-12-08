@@ -164,6 +164,7 @@ public class MavenBuilder extends IncrementalProjectBuilder implements DeltaProv
       Set<IProject> dependencies = builder.build(context.getSession(), projectFacade, kind, args,
           buildParticipantsByMojoExecutionKey, monitor);
 
+      MavenBuildCacheProxy.INSTANCE.saveBuild(projectFacade, monitor);
       if(dependencies.isEmpty()) {
         return null;
       }

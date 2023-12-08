@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.apache.maven.plugin.MojoExecution;
 
+import org.eclipse.m2e.core.internal.builder.MavenBuildCacheProxy;
 import org.eclipse.m2e.core.internal.lifecyclemapping.LifecycleMappingConfigurationException;
 import org.eclipse.m2e.core.internal.lifecyclemapping.LifecycleMappingFactory;
 import org.eclipse.m2e.core.internal.project.registry.MavenProjectFacade;
@@ -48,6 +49,7 @@ public abstract class AbstractCustomizableLifecycleMapping extends AbstractLifec
   public Map<MojoExecutionKey, List<AbstractBuildParticipant>> getBuildParticipants(IMavenProjectFacade projectFacade,
       IProgressMonitor monitor) throws CoreException {
     log.debug("Build participants for {}", projectFacade.getMavenProject());
+
     Map<MojoExecutionKey, List<AbstractBuildParticipant>> result = new LinkedHashMap<>();
 
     Map<MojoExecutionKey, List<IPluginExecutionMetadata>> mapping = projectFacade.getMojoExecutionMapping();
@@ -57,7 +59,8 @@ public abstract class AbstractCustomizableLifecycleMapping extends AbstractLifec
         .getExecutionPlan(ProjectRegistryManager.LIFECYCLE_DEFAULT, monitor);
 
     if(mojoExecutions != null) { // null if execution plan could not be calculated
-      for(MojoExecution mojoExecution : mojoExecutions) {
+      for(MojoExecution mojoExecution : MavenBuildCacheProxy.INSTANCE.pendingSegment(projectFacade, mojoExecutions,
+          monitor)) {
         MojoExecutionKey mojoExecutionKey = new MojoExecutionKey(mojoExecution);
         log.debug("Mojo execution key: {}", mojoExecutionKey);
         List<IPluginExecutionMetadata> executionMetadatas = mapping.get(mojoExecutionKey);
