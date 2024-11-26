@@ -1,0 +1,42 @@
+2024-12-04T16:47:57.564395Z DEBUG flox_watchdog::sentry: No Sentry DSN set, skipping Sentry initialization
+2024-12-04T16:47:57.564469Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: starting
+2024-12-04T16:47:57.564500Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: checked socket path="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" exists=false
+2024-12-04T16:47:57.564508Z  INFO watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: watchdog is on duty this_pid=95350 target_activation_id="5b20e86c"
+2024-12-04T16:47:57.564549Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: waiting for termination
+2024-12-04T16:47:57.564548Z DEBUG flox_watchdog::logger: still watching, woof woof
+2024-12-04T16:47:57.566158Z DEBUG flox_watchdog::logger: deleted log path=/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log/watchdog.2888340d.log.2024-11-29
+2024-12-04T16:47:57.566240Z DEBUG flox_watchdog::logger: deleted log path=/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log/watchdog.49635cb2.log.2024-11-29
+2024-12-04T16:47:57.567674Z DEBUG flox_watchdog::logger: deleted log path=/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log/watchdog.5b20e86c.log.2024-11-29
+2024-12-04T16:47:57.567959Z DEBUG flox_watchdog::logger: deleted log path=/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log/watchdog.5b20e86c.log.2024-11-30
+2024-12-04T16:47:57.568789Z DEBUG flox_watchdog::logger: deleted log path=/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log/watchdog.a85d1b20.log.2024-11-29
+2024-12-04T16:47:57.569037Z DEBUG flox_watchdog::logger: deleted log path=/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log/watchdog.f95ac6e9.log.2024-11-29
+2024-12-04T16:48:01.236426Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog::process: no output from /bin/ps, treating as not running pid=95333
+2024-12-04T16:48:01.239628Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog::process: no output from /bin/ps, treating as not running pid=95333
+2024-12-04T16:48:01.239648Z  INFO watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: running cleanup after all PIDs terminated
+2024-12-04T16:48:01.239665Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: running cleanup
+2024-12-04T16:48:01.239672Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: did not shut down process-compose reason="no socket"
+2024-12-04T16:48:01.240265Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: finished cleanup
+2024-12-04T21:52:59.842686Z DEBUG flox_watchdog::sentry: No Sentry DSN set, skipping Sentry initialization
+2024-12-04T21:52:59.842937Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: starting
+2024-12-04T21:52:59.842983Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: checked socket path="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" exists=false
+2024-12-04T21:52:59.842991Z  INFO watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: watchdog is on duty this_pid=86023 target_activation_id="5b20e86c"
+2024-12-04T21:52:59.843037Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: waiting for termination
+2024-12-04T21:52:59.843041Z DEBUG flox_watchdog::logger: still watching, woof woof
+2024-12-04T21:53:03.524549Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog::process: no output from /bin/ps, treating as not running pid=86006
+2024-12-04T21:53:03.527727Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog::process: no output from /bin/ps, treating as not running pid=86006
+2024-12-04T21:53:03.527747Z  INFO watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: running cleanup after all PIDs terminated
+2024-12-04T21:53:03.527757Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: running cleanup
+2024-12-04T21:53:03.527764Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: did not shut down process-compose reason="no socket"
+2024-12-04T21:53:03.528284Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: finished cleanup
+2024-12-04T22:21:24.423002Z DEBUG flox_watchdog::sentry: No Sentry DSN set, skipping Sentry initialization
+2024-12-04T22:21:24.423250Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: starting
+2024-12-04T22:21:24.423281Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: checked socket path="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" exists=false
+2024-12-04T22:21:24.423289Z  INFO watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: watchdog is on duty this_pid=4935 target_activation_id="5b20e86c"
+2024-12-04T22:21:24.423331Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: waiting for termination
+2024-12-04T22:21:24.423348Z DEBUG flox_watchdog::logger: still watching, woof woof
+2024-12-04T22:21:28.098292Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog::process: no output from /bin/ps, treating as not running pid=4918
+2024-12-04T22:21:28.101662Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog::process: no output from /bin/ps, treating as not running pid=4918
+2024-12-04T22:21:28.101683Z  INFO watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: running cleanup after all PIDs terminated
+2024-12-04T22:21:28.101694Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: running cleanup
+2024-12-04T22:21:28.101701Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: did not shut down process-compose reason="no socket"
+2024-12-04T22:21:28.102273Z DEBUG watchdog{socket="/Users/stephane.lacoin/.xdg/flox.3481a253.sock" log_dir="/Volumes/GitHub/eclipse-m2e/m2e-core/.flox/log"}: flox_watchdog: finished cleanup

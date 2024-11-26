@@ -264,6 +264,18 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+		  <!-- separate m2e build in a dedicated folder -->
+		  <id>m2e-build-target</id>
+		  <activation>
+		    <property>
+		      <name>m2e.version</name>
+		    </property>
+		  </activation>
+		  <build>
+		    <directory>bin</directory>
+		  </build>
+		</profile>
 	</profiles>
 
 	<developers>

@@ -939,7 +939,7 @@ public class ProjectRegistryManager implements ISaveParticipant {
       resultMap = context.execute((ctx, mon) -> {
         ProjectBuildingRequest request = context.newProjectBuildingRequest();
         request.setResolveDependencies(true);
-        List<File> pomFiles = Stream.of(toJavaIoFile(pomFile)).filter(Objects::nonNull).toList();
+        List<File> pomFiles = Stream.of(ctx.getExecutionRequest().getPom()).filter(Objects::nonNull).toList();
         return IMavenToolbox.of(ctx).readMavenProjects(pomFiles, request);
       }, monitor);
       return resultMap.values();
@@ -973,10 +973,12 @@ public class ProjectRegistryManager implements ISaveParticipant {
     }
   }
 
+
   private MavenExecutionRequest configureExecutionRequest(MavenExecutionRequest request, IProjectRegistry state,
       IFile pom, IProjectConfiguration resolverConfiguration) {
     if(pom != null) {
-      request.setPom(ProjectRegistryManager.toJavaIoFile(pom));
+      MavenProject mavenProject = mavenProjectOf(state, pom);
+      request.setPom(mavenProject != null ? mavenProject.getFile() : ProjectRegistryManager.toJavaIoFile(pom));
     }
 
     request.addActiveProfiles(resolverConfiguration.getActiveProfileList());
@@ -1000,6 +1002,14 @@ public class ProjectRegistryManager implements ISaveParticipant {
     }
 
     return request;
+  }
+
+  private MavenProject mavenProjectOf(IProjectRegistry state, IFile pom) {
+    MavenProjectFacade projectFacade = state.getProjectFacade(pom);
+    if(projectFacade == null) {
+      return null;
+    }
+    return projectFacade.getMavenProject();
   }
 
   private static EclipseWorkspaceArtifactRepository getWorkspaceReader(IProjectRegistry state, IFile pom,

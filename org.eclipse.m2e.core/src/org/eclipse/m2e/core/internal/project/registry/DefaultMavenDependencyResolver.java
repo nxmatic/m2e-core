@@ -67,7 +67,7 @@ public class DefaultMavenDependencyResolver extends AbstractMavenDependencyResol
       ProjectBuildingRequest configuration = ctx.newProjectBuildingRequest();
       configuration.setProject(facade.getMavenProject());
       configuration.setResolveDependencies(true);
-      return IMavenToolbox.of(ctx).readMavenProject(facade.getPomFile(), configuration);
+      return IMavenToolbox.of(ctx).readMavenProject(facade.getMavenProject().getFile(), configuration);
     }, monitor);
 
     markerManager.addMarkers(facade.getPom(), IMavenConstants.MARKER_DEPENDENCY_ID, mavenResult);

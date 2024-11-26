@@ -184,6 +184,7 @@
   </setupTask>
   <setupTask
       xsi:type="pde:TargetPlatformTask"
+      disabled="true"
       name="m2e-target-platform"/>
   <setupTask
       xsi:type="projects:ProjectsBuildTask"

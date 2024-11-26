@@ -29,9 +29,10 @@
 	<properties>
 		<!-- maven core version -->
 		<maven-core.version>3.9.9</maven-core.version>
+		<maven-core.version>3.9.6-dev</maven-core.version>
 		<!-- below are m2e-specific addons -->
 		<plexus-build-api.version>1.2.0</plexus-build-api.version>
-		<jars.directory>target/jars</jars.directory>
+		<jars.directory>${project.build.directory}/jars</jars.directory>
 		<outputDirectory.sources>${project.build.directory}/classes-source</outputDirectory.sources>
 		<failIfMacSigningFailed>false</failIfMacSigningFailed>
 		<buildqualifier.format>%Y%m%d-%H%M</buildqualifier.format>
@@ -153,6 +154,10 @@
 			<artifactId>javax.inject</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+		        <groupId>hu.blackbelt.bundles.vavr</groupId>
+		        <artifactId>io.vavr</artifactId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -162,6 +167,11 @@
 				<version>${maven-core.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+		                <groupId>hu.blackbelt.bundles.vavr</groupId>
+				<artifactId>io.vavr</artifactId>
+				<version>0.10.4_0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -306,7 +316,7 @@
 						</goals>
 						<phase>generate-resources</phase>
 						<configuration>
-							<outputDirectory>${project.basedir}/${jars.directory}</outputDirectory>
+							<outputDirectory>${jars.directory}</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>

@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
 import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
@@ -48,15 +49,20 @@ import org.apache.maven.artifact.InvalidRepositoryException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.cli.MavenCli;
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
+import org.apache.maven.cli.event.DefaultEventSpyContext;
 import org.apache.maven.eventspy.internal.EventSpyDispatcher;
+import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
+import org.apache.maven.execution.ExecutionEvent.Type;
+import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionRequestPopulationException;
 import org.apache.maven.execution.MavenExecutionRequestPopulator;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.lifecycle.internal.DependencyContext;
+import org.apache.maven.lifecycle.internal.ExecutionEventCatapult;
 import org.apache.maven.lifecycle.internal.LifecycleExecutionPlanCalculator;
 import org.apache.maven.lifecycle.internal.MojoExecutor;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -277,7 +283,7 @@ public class MavenExecutionContext implements IMavenExecutionContext {
   public <V> V execute(ICallable<V> callable, IProgressMonitor monitor) throws CoreException {
     return execute(null, callable, monitor);
   }
-
+  
   @Override
   public <V> V execute(MavenProject project, ICallable<V> callable, IProgressMonitor monitor) throws CoreException {
     Deque<MavenExecutionContext> stack = threadLocal.get();
@@ -293,35 +299,13 @@ public class MavenExecutionContext implements IMavenExecutionContext {
     }
 
     // remember original configuration to "pop" the session stack properly
-    final MavenExecutionRequest origRequest = request;
+    final Optional<MavenExecutionRequest> origRequest = Optional.ofNullable(request);
+    final Optional<ExecutionListener> origExecutionListener = origRequest
+        .map(MavenExecutionRequest::getExecutionListener);
     final Map<String, Object> origContext = context;
 
-    if(request == null && parent != null) {
-      this.request = parent.request;
-      this.context = new HashMap<>(parent.context);
-    } else {
-      this.context = new HashMap<>();
-      if(request == null) {
-        request = newExecutionRequest();
-      }
-      IComponentLookup lookup = getComponentLookup();
-      try {
-        lookup.lookup(MavenExecutionRequestPopulator.class).populateDefaults(request);
-      } catch(MavenExecutionRequestPopulationException ex) {
-        throw new CoreException(Status.error(Messages.MavenImpl_error_read_config, ex));
-      }
-      populateSystemProperties(request);
-      setValue(CTX_LOCALREPOSITORY, request.getLocalRepository());
-      final FilterRepositorySystemSession repositorySession = createRepositorySession(request,
-          MavenPlugin.getMavenConfiguration(), lookup);
-      setValue(CTX_REPOSITORYSESSION, repositorySession);
-      if(parent != null) {
-        repositorySession.setData(parent.getRepositorySession().getData());
-      }
-      final MavenExecutionResult result = new DefaultMavenExecutionResult();
-      setValue(CTX_MAVENSESSION,
-          new MavenSession(lookup.lookup(PlexusContainer.class), repositorySession, request, result));
-    }
+    final Boolean clonedRequestFromParent = populateContext(parent);
+
     IComponentLookup lookup = getComponentLookup();
 
     final LegacySupport legacySupport = lookup.lookup(LegacySupport.class);
@@ -336,17 +320,95 @@ public class MavenExecutionContext implements IMavenExecutionContext {
     sessionScope.seed(MavenSession.class, session);
 
     try {
-      return executeBare(project, callable, monitor);
+      MavenSession session2 = session.getContainer().lookup(MavenSession.class);
+      MavenSession session3 = lookup.lookup(MavenSession.class);
+      if(session2 != session || session3 != session) {
+        throw new CoreException(Status.error("wrong session lookup"));
+      }
+    } catch(ComponentLookupException cause) {
+      throw new CoreException(Status.error("cannot lookup session", cause));
+    }
+
+    final EventSpyDispatcher eventSpyDispatcher = lookup.lookup(EventSpyDispatcher.class);
+    final ExecutionEventCatapult catapult = lookup.lookup(ExecutionEventCatapult.class);
+    if(!clonedRequestFromParent) {
+      //&& Optional.ofNullable(session.getRequest()).map(MavenExecutionRequest::getPom).isPresent()) {
+
+      DefaultEventSpyContext eventSpyContext = new DefaultEventSpyContext();
+      Map<String, Object> eventSpyData = eventSpyContext.getData();
+      eventSpyData.put("plexus", lookup.lookup(PlexusContainer.class));
+      eventSpyData.put("workingDirectory", request.getBaseDirectory()); // to adapt
+      eventSpyData.put("systemProperties", request.getSystemProperties());
+      eventSpyData.put("userProperties", request.getUserProperties());
+      //data.put("versionProperties", getBuildProperties());
+      eventSpyDispatcher.init(eventSpyContext);
+
+      ExecutionListener executionListener = origExecutionListener.orElseGet(AbstractExecutionListener::new);
+      request.setExecutionListener(eventSpyDispatcher.chainListener(executionListener));
+
+      catapult.fire(Type.ProjectDiscoveryStarted, session, null);
+      catapult.fire(Type.SessionStarted, session, null);
+    }
+
+    try {
+        return executeBare(project, callable, monitor);
     } finally {
+      if(!clonedRequestFromParent
+          && Optional.ofNullable(session.getRequest()).map(MavenExecutionRequest::getPom).isPresent()) {
+        catapult.fire(Type.SessionEnded, session, null);
+      }
       sessionScope.exit();
       stack.pop();
       if(stack.isEmpty()) {
         threadLocal.set(null); // TODO decide if this is useful
       }
       legacySupport.setSession(origLegacySession);
-      request = origRequest;
+      origRequest.ifPresent(request -> request.setExecutionListener(origExecutionListener.orElse(null)));
+      request = origRequest.orElse(null);
       context = origContext;
     }
+
+  }
+
+  /**
+   * @param parent
+   * @throws CoreException
+   */
+  boolean populateContext(final MavenExecutionContext parent) throws CoreException {
+    if(request == null && parent != null) {
+      this.request = parent.request;
+      this.context = new HashMap<>(parent.context);
+
+      return true;
+    }
+
+    this.context = new HashMap<>();
+    if(request == null) {
+      request = newExecutionRequest();
+    }
+    if(request.getExecutionListener() == null) {
+      request.setExecutionListener(new AbstractExecutionListener());
+    }
+    IComponentLookup lookup = getComponentLookup();
+    try {
+      lookup.lookup(MavenExecutionRequestPopulator.class).populateDefaults(request);
+    } catch(MavenExecutionRequestPopulationException ex) {
+      throw new CoreException(Status.error(Messages.MavenImpl_error_read_config, ex));
+    }
+    populateSystemProperties(request);
+    setValue(CTX_LOCALREPOSITORY, request.getLocalRepository());
+    final FilterRepositorySystemSession repositorySession = createRepositorySession(request,
+        MavenPlugin.getMavenConfiguration(), lookup);
+    setValue(CTX_REPOSITORYSESSION, repositorySession);
+    if(parent != null) {
+      repositorySession.setData(parent.getRepositorySession().getData());
+    }
+
+    final MavenExecutionResult result = new DefaultMavenExecutionResult();
+    setValue(CTX_MAVENSESSION,
+        new MavenSession(lookup.lookup(PlexusContainer.class), repositorySession, request, result));
+
+    return false;
   }
 
   @Override
