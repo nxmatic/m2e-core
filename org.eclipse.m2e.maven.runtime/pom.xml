@@ -28,8 +28,7 @@
 
 	<properties>
 		<!-- maven core version -->
-		<maven-core.version>3.9.9</maven-core.version>
-		<maven-core.version>3.9.6-dev</maven-core.version>
+		<maven-core.version>3.9.9-dev</maven-core.version>
 		<!-- below are m2e-specific addons -->
 		<plexus-build-api.version>1.2.0</plexus-build-api.version>
 		<jars.directory>${project.build.directory}/jars</jars.directory>
